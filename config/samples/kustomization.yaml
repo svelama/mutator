@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- ship_v1_frigate.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples
