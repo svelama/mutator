@@ -22,3 +22,10 @@ Now that the project and API exist, you can successfully run the webhook command
 kubebuilder create webhook --group ship --version v1 --kind Frigate --defaulting
 ```
 
+
+Create K3D cluster and install cert manager
+
+```sh
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.19.2/cert-manager.yaml
+```
+

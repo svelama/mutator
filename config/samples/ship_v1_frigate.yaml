@@ -1,9 +1,0 @@
-apiVersion: ship.svelama.com/v1
-kind: Frigate
-metadata:
-  labels:
-    app.kubernetes.io/name: mutator
-    app.kubernetes.io/managed-by: kustomize
-  name: frigate-sample
-spec:
-  # TODO(user): Add fields here

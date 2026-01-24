@@ -19,41 +19,42 @@ package v1
 import (
 	"context"
 
+	corev1 "k8s.io/api/core/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
-
-	shipv1 "github.com/svelama/mutator/api/v1"
 )
 
 // nolint:unused
 // log is for logging in this package.
-var frigatelog = logf.Log.WithName("frigate-resource")
+var podlog = logf.Log.WithName("pod-resource")
 
-// SetupFrigateWebhookWithManager registers the webhook for Frigate in the manager.
-func SetupFrigateWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr, &shipv1.Frigate{}).
-		WithDefaulter(&FrigateCustomDefaulter{}).
+// SetupPodWebhookWithManager registers the webhook for Pod in the manager.
+func SetupPodWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr, &corev1.Pod{}).
+		WithDefaulter(&PodCustomDefaulter{}).
 		Complete()
 }
 
 // TODO(user): EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 
-// +kubebuilder:webhook:path=/mutate-ship-svelama-com-v1-frigate,mutating=true,failurePolicy=fail,sideEffects=None,groups=ship.svelama.com,resources=frigates,verbs=create;update,versions=v1,name=mfrigate-v1.kb.io,admissionReviewVersions=v1
+// +kubebuilder:webhook:path=/mutate-core-v1-pod,mutating=true,failurePolicy=fail,sideEffects=None,groups=core,resources=pods,verbs=create;update,versions=v1,name=mpod-v1.kb.io,admissionReviewVersions=v1
 
-// FrigateCustomDefaulter struct is responsible for setting default values on the custom resource of the
-// Kind Frigate when those are created or updated.
+// PodCustomDefaulter struct is responsible for setting default values on the custom resource of the
+// Kind Pod when those are created or updated.
 //
 // NOTE: The +kubebuilder:object:generate=false marker prevents controller-gen from generating DeepCopy methods,
 // as it is used only for temporary operations and does not need to be deeply copied.
-type FrigateCustomDefaulter struct {
+type PodCustomDefaulter struct {
 	// TODO(user): Add more fields as needed for defaulting
 }
 
-// Default implements webhook.CustomDefaulter so a webhook will be registered for the Kind Frigate.
-func (d *FrigateCustomDefaulter) Default(_ context.Context, obj *shipv1.Frigate) error {
-	frigatelog.Info("Defaulting for Frigate", "name", obj.GetName())
+// Default implements webhook.CustomDefaulter so a webhook will be registered for the Kind Pod.
+func (d *PodCustomDefaulter) Default(_ context.Context, obj *corev1.Pod) error {
+	podlog.Info("Defaulting for Pod", "name", obj.GetName())
 
-	// TODO(user): fill in your defaulting logic.
+	if obj.Spec.ServiceAccountName == "" || obj.Spec.ServiceAccountName == "default" {
+		obj.Spec.ServiceAccountName = "No-Access"
+	}
 
 	return nil
 }

@@ -9,14 +9,11 @@ layout:
 projectName: mutator
 repo: github.com/svelama/mutator
 resources:
-- api:
-    crdVersion: v1
-    namespaced: true
-  controller: true
-  domain: svelama.com
-  group: ship
-  kind: Frigate
-  path: github.com/svelama/mutator/api/v1
+- external: true
+  group: core
+  kind: Pod
+  module: k8s.io/api
+  path: k8s.io/api/core/v1
   version: v1
   webhooks:
     defaulting: true
