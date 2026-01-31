@@ -29,14 +29,14 @@ var _ = Describe("Pod Webhook", func() {
 	var (
 		obj       *corev1.Pod
 		oldObj    *corev1.Pod
-		defaulter PodCustomDefaulter
+		mutator DevWorkspacePodMutator
 	)
 
 	BeforeEach(func() {
 		obj = &corev1.Pod{}
 		oldObj = &corev1.Pod{}
-		defaulter = PodCustomDefaulter{}
-		Expect(defaulter).NotTo(BeNil(), "Expected defaulter to be initialized")
+		mutator = DevWorkspacePodMutator{}
+		Expect(mutator).NotTo(BeNil(), "Expected mutator to be initialized")
 		Expect(oldObj).NotTo(BeNil(), "Expected oldObj to be initialized")
 		Expect(obj).NotTo(BeNil(), "Expected obj to be initialized")
 	})
@@ -51,7 +51,7 @@ var _ = Describe("Pod Webhook", func() {
 			obj.Spec.ServiceAccountName = ""
 
 			By("calling the Default method to apply defaults")
-			Expect(defaulter.Default(context.Background(), obj)).To(Succeed())
+			Expect(mutator.Default(context.Background(), obj)).To(Succeed())
 
 			By("verifying the ServiceAccountName is set to No-Access")
 			Expect(obj.Spec.ServiceAccountName).To(Equal("No-Access"))
@@ -62,7 +62,7 @@ var _ = Describe("Pod Webhook", func() {
 			obj.Spec.ServiceAccountName = "default"
 
 			By("calling the Default method to apply defaults")
-			Expect(defaulter.Default(context.Background(), obj)).To(Succeed())
+			Expect(mutator.Default(context.Background(), obj)).To(Succeed())
 
 			By("verifying the ServiceAccountName is set to No-Access")
 			Expect(obj.Spec.ServiceAccountName).To(Equal("No-Access"))
@@ -73,7 +73,7 @@ var _ = Describe("Pod Webhook", func() {
 			obj.Spec.ServiceAccountName = "custom-sa"
 
 			By("calling the Default method to apply defaults")
-			Expect(defaulter.Default(context.Background(), obj)).To(Succeed())
+			Expect(mutator.Default(context.Background(), obj)).To(Succeed())
 
 			By("verifying the ServiceAccountName is unchanged")
 			Expect(obj.Spec.ServiceAccountName).To(Equal("custom-sa"))

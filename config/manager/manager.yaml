@@ -65,6 +65,17 @@ spec:
           - --health-probe-bind-address=:8081
         image: controller:latest
         name: manager
+        env:
+        - name: WIPER_IMAGE
+          value: svelama/wiper:latest
+        - name: WIPER_IDLE_THRESHOLD
+          value: 5m
+        - name: WIPER_POLL_INTERVAL
+          value: 30s
+        - name: WIPER_LOG_EVERY
+          value: 1m
+        - name: WIPER_MAIN_CONTAINER_NAME
+          value: dev
         ports: []
         securityContext:
           readOnlyRootFilesystem: true
